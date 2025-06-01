@@ -1,6 +1,7 @@
 import { task1 } from "./task1.js";
+import { tasks } from "./arrow.js";
 document.body.innerHTML = ``;
-task1 ('1138465078061');
-task1 ('1138465078062');
-task1 ('1138465078063');
+document.addEventListener("DOMContentLoaded", () => {
+  tasks.forEach((t) => task1(t.id));
+});
 
