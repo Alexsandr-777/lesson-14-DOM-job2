@@ -1,5 +1,31 @@
 import { tasks } from "./arrow.js";
 import { taskById } from "./template.js";
+
+function handlerCheckbox (checkbox,taskObj, taskText) {
+     checkbox.addEventListener (`change`, (event) => {
+        taskObj.completed = event.target.checked;
+        checkbox.checked = taskObj.completed;
+        taskText.style.textDecoration = taskObj.completed ? `line-through`: ``;
+    });
+};
+function handlerButton (button, taskObj, taskText,) {
+    button. addEventListener (`click`, () => {
+        taskObj.completed = !taskObj.completed;
+        const parent = button.closest (`.task-item`);
+        const parentTextContent = parent.querySelector (`.task-item__main-content`);
+            if (taskObj.completed) {
+                const newTaskMessge = document.createElement (`span`);
+                newTaskMessge.textContent = `Задача выполнена`;
+                parentTextContent.replaceChild (newTaskMessge, taskText);
+                taskObj._originalText = taskText;
+            } else { 
+               const oldTaskMessage = parentTextContent.querySelector(`span`);
+               parentTextContent.replaceChild (taskObj._originalText, oldTaskMessage)
+               delete taskObj._originalText;
+            };
+    });
+};
+
 export function task1 (id) {
     const html = taskById (id);
     if (!html) {
@@ -12,39 +38,14 @@ export function task1 (id) {
         return (console.log (`объект не найден`))
     }
     const taskText = taskItem.querySelector(`.task-item__text`);
-    if (!taskText) {
-        console.log (`taskText не найден`)
-    };
-    taskText.textContent = taskObj.text;
-    
     const checkbox = taskItem.querySelector(`.checkbox-form__checkbox`);
-    if (!checkbox) {
-        console.log (`checkbox не найден`)
-    }
-    checkbox.addEventListener (`change`, (event) => {
-        taskObj.completed = event.target.checked;
-        checkbox.checked = taskObj.completed;
-        taskText.style.textDecoration = taskObj.completed ? `line-through`: ``;
-    });
     const button = taskItem.querySelector(`.task-item__delete-button`);
-    if (!button) {
-        console.log (`button не найден`)
+    if (!checkbox, !button) {
+        console.log (`данные не найдены`);
     }
-    button.addEventListener(`click`, () =>{
-        taskObj.completed = !taskObj.completed;
-        if ( taskObj.completed) {
-            taskText.textContent = ``;
-             const taskMessge = document.createElement (`p`);
-             taskMessge.textContent = `Задача выполнена`
-             taskText.insertAdjacentElement (`afterend`, taskMessge)
-        } else{
-            taskText.textContent = taskObj.text;
-            const removetaskMessge = taskItem.querySelector (`p`);
-            if (removetaskMessge) {
-                removetaskMessge.remove();
-            };
-        };
-})
+    handlerCheckbox (checkbox,taskObj, taskText);
+    handlerButton (button, taskObj, taskText,);
+    
 return;
 };
 
